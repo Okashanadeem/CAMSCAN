@@ -28,6 +28,13 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Initialize Android project
+        run: flutter create --platforms android .
+
+      - name: Add Camera Permission
+        run: |
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
+
       - name: Build APK
         run: flutter build apk --release
 
