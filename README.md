@@ -1,4 +1,4 @@
-# LocalScan Attendance Management System
+# CAMS Scan ME
 
 An offline-first Flutter Android application for tracking student attendance using QR codes.
 

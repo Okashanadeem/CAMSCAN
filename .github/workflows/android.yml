@@ -29,7 +29,7 @@ jobs:
         run: flutter pub get
 
       - name: Initialize Android project
-        run: flutter create --platforms android .
+        run: flutter create --project-name cams_scan_me --platforms android .
 
       - name: Add Camera Permission
         run: |
