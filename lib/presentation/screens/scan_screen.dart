@@ -49,11 +49,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
             HapticFeedback.mediumImpact(); // Vibration on success
             _showFeedback('Success: $code', Colors.green);
           } else {
-            HapticFeedback.warningImpact(); // Vibration on duplicate
+            HapticFeedback.heavyImpact(); // Vibration on duplicate
             _showFeedback('Already Scanned: $code', Colors.orange);
           }
         } else {
-          HapticFeedback.errorImpact(); // Vibration on invalid
+          HapticFeedback.vibrate(); // Vibration on invalid
           _showFeedback('Invalid QR Format: $code', Colors.red);
         }
 
