@@ -37,4 +37,16 @@ class ApiService {
       return false;
     }
   }
+
+  Future<bool> clearRemoteData() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/admin/clear-all'),
+        headers: {'X-API-KEY': apiKey},
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
 }

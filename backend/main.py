@@ -42,6 +42,15 @@ def upload_sessions(sessions: List[AttendanceSession], api_key: str = Depends(ge
         print(f"Error uploading sessions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/admin/clear-all")
+def clear_all_data(api_key: str = Depends(get_api_key)):
+    try:
+        database.db.sessions.delete_many({})
+        database.db.courses.delete_many({})
+        return {"status": "success", "message": "All cloud data cleared successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", reload=True)

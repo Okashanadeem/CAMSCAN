@@ -122,7 +122,12 @@ class AdminPanelScreen extends ConsumerWidget {
           TextButton(
             onPressed: () async {
               if (clearAll) {
-                await ref.read(sessionsProvider.notifier).clearAll();
+                final success = await ref.read(sessionsProvider.notifier).clearEverything();
+                if (!success && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Note: Local data cleared, but Cloud reset failed.')),
+                  );
+                }
               } else {
                 await ref.read(databaseProvider).clearSessions();
                 await ref.read(sessionsProvider.notifier).loadSessions();

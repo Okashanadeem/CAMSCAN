@@ -101,6 +101,15 @@ class SessionNotifier extends StateNotifier<List<AttendanceSession>> {
     await _db.clearAll();
     await loadSessions();
   }
+
+  Future<bool> clearEverything() async {
+    // Clear Remote
+    final remoteSuccess = await _api.clearRemoteData();
+    // Clear Local
+    await _db.clearAll();
+    await loadSessions();
+    return remoteSuccess;
+  }
 }
 
 // Active Session Provider
