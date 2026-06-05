@@ -5,15 +5,46 @@ from models import Course, AttendanceSession
 import database
 import os
 
+import os
+import logging
+
+# Configure Logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("CAMSCAN")
+
 app = FastAPI(title="CAMSCAN Backend")
 
 @app.get("/")
 def root():
+    logger.info("Root endpoint accessed")
     return {"message": "CAMSCAN API is Running", "status": "healthy"}
 
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "database": "connected"}
+
+@app.get("/api/admin/summary")
+def get_summary(api_key: str = Depends(get_api_key)):
+    try:
+        total_sessions = database.db.sessions.count_documents({})
+        total_courses = database.db.courses.count_documents({})
+        
+        # Simple aggregation for total students across all sessions
+        pipeline = [
+            {"$project": {"count": {"$size": "$students"}}},
+            {"$group": {"_id": None, "total": {"$sum": "$count"}}}
+        ]
+        result = list(database.db.sessions.aggregate(pipeline))
+        total_students = result[0]["total"] if result else 0
+        
+        return {
+            "total_sessions": total_sessions,
+            "total_courses": total_courses,
+            "total_attendance_records": total_students
+        }
+    except Exception as e:
+        logger.error(f"Summary error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 API_KEY = os.getenv("API_KEY", "CAMSCAN_v1_Secret_Key_2026")
 API_KEY_NAME = "X-API-KEY"
