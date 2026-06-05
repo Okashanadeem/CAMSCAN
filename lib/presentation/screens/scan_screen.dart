@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../providers/providers.dart';
@@ -32,10 +33,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     for (final barcode in barcodes) {
       final String? code = barcode.rawValue;
       if (code != null) {
-        setState(() {
-          isProcessing = true;
-          lastScannedId = code;
-        });
+        if (mounted) {
+          setState(() {
+            isProcessing = true;
+            lastScannedId = code;
+          });
+        }
 
         if (qrRegex.hasMatch(code)) {
           final success = await ref
@@ -43,16 +46,19 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               .addStudent(code);
 
           if (success) {
+            HapticFeedback.mediumImpact(); // Vibration on success
             _showFeedback('Success: $code', Colors.green);
           } else {
+            HapticFeedback.warningImpact(); // Vibration on duplicate
             _showFeedback('Already Scanned: $code', Colors.orange);
           }
         } else {
+          HapticFeedback.errorImpact(); // Vibration on invalid
           _showFeedback('Invalid QR Format: $code', Colors.red);
         }
 
         // Delay to prevent rapid multiple scans
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(milliseconds: 1500));
         if (mounted) {
           setState(() {
             isProcessing = false;

@@ -79,9 +79,11 @@ class SessionNotifier extends StateNotifier<List<AttendanceSession>> {
       payload.add({
         'session_id': session.sessionId,
         'course_id': session.courseId,
+        'course_name': session.courseName,
+        'created_at': session.createdAt.toIso8601String(),
         'students': attendance.map((a) => {
           'student_id': a.studentId,
-          'time': a.scannedAt.toIso8601String(),
+          'scanned_at': a.scannedAt.toIso8601String(),
         }).toList(),
       });
     }

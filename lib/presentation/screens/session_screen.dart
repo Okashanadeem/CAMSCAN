@@ -13,13 +13,13 @@ class SessionScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attendanceList = ref.watch(activeSessionAttendanceProvider(session.sessionId));
-    final isSaved = session.status != SessionStatus.draft;
+    final isEditable = session.status == SessionStatus.draft;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(session.courseName),
         actions: [
-          if (!isSaved)
+          if (isEditable)
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: () => _confirmSave(context, ref),
@@ -42,7 +42,7 @@ class SessionScreen extends ConsumerWidget {
                         leading: CircleAvatar(child: Text((index + 1).toString())),
                         title: Text(record.studentId, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text(DateFormat('HH:mm:ss').format(record.scannedAt)),
-                        trailing: !isSaved
+                        trailing: isEditable
                             ? IconButton(
                                 icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
                                 onPressed: () => ref
@@ -56,7 +56,7 @@ class SessionScreen extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: !isSaved
+      floatingActionButton: isEditable
           ? FloatingActionButton.extended(
               onPressed: () {
                 Navigator.push(

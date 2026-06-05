@@ -12,7 +12,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Attendance System'),
+        title: const Text('CAMSCAN'),
         centerTitle: true,
       ),
       body: Padding(
