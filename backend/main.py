@@ -7,6 +7,14 @@ import os
 
 app = FastAPI(title="CAMSCAN Backend")
 
+@app.get("/")
+def root():
+    return {"message": "CAMSCAN API is Running", "status": "healthy"}
+
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok", "database": "connected"}
+
 API_KEY = os.getenv("API_KEY", "CAMSCAN_v1_Secret_Key_2026")
 API_KEY_NAME = "X-API-KEY"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
